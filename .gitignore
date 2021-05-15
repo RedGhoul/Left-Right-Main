@@ -1,0 +1,53 @@
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+
+# Rider
+.idea
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Visual Studio 2015
+.vs/
+
+/AJobBoard/wwwroot
+AJobBoard/ScaffoldingReadme.txt
+Scrapper/node_modules
+AJobBoard/appsettings.json
+*.csv
+AJobBoard/appsettings.Development.json
+AJobBoard/appsettings.Development.json
+AJobBoard/appsettings.Development.json
+AJobBoard/Properties/PublishProfiles/TechTransparency93 - Web Deploy.pubxml
+Scrapper/secret.py
+Scrapper/my_name
+AJobBoard/appsettings.Development.json
+TextClassify/secrets.py
+AJobBoard.tar
+appsettings.json
+appsettings.Development.json

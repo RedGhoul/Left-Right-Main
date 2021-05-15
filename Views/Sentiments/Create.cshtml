@@ -1,0 +1,52 @@
+﻿@model LeftRightNet.Models.Sentiment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Sentiment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="pos" class="control-label"></label>
+                <input asp-for="pos" class="form-control" />
+                <span asp-validation-for="pos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="compound" class="control-label"></label>
+                <input asp-for="compound" class="form-control" />
+                <span asp-validation-for="compound" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="neu" class="control-label"></label>
+                <input asp-for="neu" class="form-control" />
+                <span asp-validation-for="neu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="neg" class="control-label"></label>
+                <input asp-for="neg" class="form-control" />
+                <span asp-validation-for="neg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HeadLineId" class="control-label"></label>
+                <select asp-for="HeadLineId" class ="form-control" asp-items="ViewBag.HeadLineId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
