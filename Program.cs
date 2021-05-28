@@ -16,25 +16,7 @@ namespace LeftRightNet
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-           .SetBasePath(Directory.GetCurrentDirectory())
-           .AddJsonFile("appsettings.json")
-           .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Warning()
-                .WriteTo
-                .MSSqlServer(
-                    connectionString: configuration.GetConnectionString("DefaultConnection"),
-                    sinkOptions: new MSSqlServerSinkOptions
-                    {
-                        TableName = "LogEvents",
-                        AutoCreateSqlTable = true
-                    })
-                .CreateLogger();
-
             CreateHostBuilder(args).Build().Run();
-            Log.CloseAndFlush();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
