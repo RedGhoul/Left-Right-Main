@@ -56,7 +56,7 @@ namespace LeftRightNet
                         PrepareSchemaIfNecessary = true,
                         DashboardJobListLimit = 50000,
                         TransactionTimeout = TimeSpan.FromMinutes(30),
-                        TablesPrefix = "Hangfire"
+                        TablesPrefix = "Hangfire_LeftRight_"
                     })));
 
             services.AddHttpClient("GetHeadLines");
