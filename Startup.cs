@@ -34,6 +34,7 @@ namespace LeftRightNet
         public void ConfigureServices(IServiceCollection services)
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            string AppHangfireConnectionString = Configuration.GetConnectionString("DefaultConnection_Hangfire");
 
             services.AddDbContext<ApplicationDbContext>(options =>
               options.UseMySql(AppDBConnectionString, new MySqlServerVersion(new Version(8, 0, 25))));
@@ -45,7 +46,7 @@ namespace LeftRightNet
             services.AddControllersWithViews();
 
             services.AddHangfire(configuration => configuration.UseStorage(new MySqlStorage(
-                    AppDBConnectionString,
+                    AppHangfireConnectionString,
                     new MySqlStorageOptions
                     {
                         TransactionIsolationLevel = IsolationLevel.ReadCommitted,
