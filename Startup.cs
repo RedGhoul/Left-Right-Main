@@ -34,7 +34,7 @@ namespace LeftRightNet
         public void ConfigureServices(IServiceCollection services)
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            string AppHangfireConnectionString = Environment.GetEnvironmentVariable("DefaultConnection_Hangfire");
+            string AppHangfireConnectionString = Environment.GetEnvironmentVariable("DefaultConnectionHangfire");
 
             services.AddDbContext<ApplicationDbContext>(options =>
               options.UseMySql(AppDBConnectionString, new MySqlServerVersion(new Version(8, 0, 25))));
