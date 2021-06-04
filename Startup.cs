@@ -1,23 +1,17 @@
 using Hangfire;
-using Hangfire.MySql;
 using LeftRightNet.Data;
 using LeftRightNet.Hangfire;
 using LeftRightNet.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Transactions;
+using Hangfire.SqlServer;
 
 namespace LeftRightNet
 {
@@ -34,10 +28,9 @@ namespace LeftRightNet
         public void ConfigureServices(IServiceCollection services)
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            string AppHangfireConnectionString = Environment.GetEnvironmentVariable("DefaultConnectionHangfire");
 
             services.AddDbContext<ApplicationDbContext>(options =>
-              options.UseMySql(AppDBConnectionString, new MySqlServerVersion(new Version(8, 0, 25))));
+              options.UseSqlServer(AppDBConnectionString));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -45,19 +38,19 @@ namespace LeftRightNet
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            services.AddHangfire(configuration => configuration.UseStorage(new MySqlStorage(
-                    AppHangfireConnectionString,
-                    new MySqlStorageOptions
-                    {
-                        TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-                        QueuePollInterval = TimeSpan.FromSeconds(5),
-                        JobExpirationCheckInterval = TimeSpan.FromMinutes(1),
-                        CountersAggregateInterval = TimeSpan.FromMinutes(1),
-                        PrepareSchemaIfNecessary = true,
-                        DashboardJobListLimit = 50000,
-                        TransactionTimeout = TimeSpan.FromMinutes(30),
-                        TablesPrefix = "Hangfire_LeftRight_"
-                    })));
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+
 
             services.AddHttpClient("GetHeadLines");
 
