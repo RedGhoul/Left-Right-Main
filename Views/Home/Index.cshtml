@@ -6,21 +6,29 @@
 
 <div class="text-center">
     <h1 class="display-4">Top Headlines Of The Day</h1>
-    @foreach (var news in Model.SiteHeadLines)
+    @if (Model.SiteHeadLines.Count > 0)
     {
-        <ul class="list-group">
-            <li class="list-group-item active" aria-current="true"><h2>@news.Key</h2></li>
-            <li class="list-group-item active" aria-current="true"><h3>Avg Sentiment: @Math.Round(news.Value.Average(x => x.Sentiment.compound), 4)</h3></li>
+        @foreach (var news in Model.SiteHeadLines)
+        {
+            <ul class="list-group">
+                <li class="list-group-item active" aria-current="true"><h2>@news.Key</h2></li>
+                @if (news.Value.Count > 0)
+                {
+                    <li class="list-group-item active" aria-current="true"><h3>Avg Sentiment: @Math.Round(news.Value.Average(x => x.Sentiment.compound), 4)</h3></li>
 
-            @foreach (var snap in news.Value)
-            {
-
-
-                <li class="list-group-item">@snap.ValueText</li>
-
-            }
-        </ul>
+                    @foreach (var snap in news.Value)
+                    {
 
 
+                        <li class="list-group-item">@snap.ValueText</li>
+
+                    }
+                }
+
+            </ul>
+
+
+        }
     }
+
 </div>
