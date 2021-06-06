@@ -46,6 +46,23 @@ namespace LeftRightNet.Data
                 .HasOne(x => x.Sentiment)
                 .WithOne(x => x.HeadLine)
                 .HasForeignKey<Sentiment>(x => x.HeadLineId);
+
+            builder.Entity<HeadLine>()
+                .HasGeneratedTsVectorColumn(
+                    p => p.SearchVector,
+                    "english",
+                    p => new { p.ValueText })
+                .HasIndex(p => p.SearchVector)
+                .HasMethod("GIN");
+
+            builder.Entity<SnapShot>().Property(x => x.ImageHashId).HasColumnType("VARCHAR(255)");
+
+            builder.Entity<HeadLine>().HasIndex(x => x.CreatedAt);
+            builder.Entity<SnapShot>().HasIndex(x => x.CreatedAt);
+            builder.Entity<SnapShot>().HasIndex(x => x.ImageHashId);
+            builder.Entity<Sentiment>().HasIndex(x => x.pos);
+            builder.Entity<Sentiment>().HasIndex(x => x.neg);
+            builder.Entity<Sentiment>().HasIndex(x => x.compound);
         }
     }
 }

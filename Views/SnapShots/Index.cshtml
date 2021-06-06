@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
+                @Html.DisplayNameFor(model => model.ImageHashId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
@@ -28,7 +28,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
+                @Html.DisplayFor(modelItem => item.ImageHashId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)

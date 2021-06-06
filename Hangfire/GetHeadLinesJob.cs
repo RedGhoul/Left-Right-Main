@@ -80,7 +80,7 @@ namespace LeftRightNet.Hangfire
                     var newSnapShot = new Models.SnapShot()
                     {
                         NewsSiteId = site.Id,
-                        ImageUrl = listOfHeadLines.photoIdName,
+                        ImageHashId = listOfHeadLines.photoIdName,
                         CreatedAt = DateTime.UtcNow,
                     };
 
