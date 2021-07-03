@@ -49,6 +49,9 @@
         $(document).ready(function () {
             alertify.message('Postive Avg Sentiment = Good News', 300, function () { });
             alertify.message('Negative Avg Sentiment = Bad News', 300, function () { });
+            var notificationCheckMeOut = alertify.message(
+                'Check me out at <a href="https://www.avaneesa.com/">avaneesa.com</a>', 10000);
+            notificationCheckMeOut.ondismiss = function () { return false; };
         });
     </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
