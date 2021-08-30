@@ -111,21 +111,28 @@ namespace LeftRightNet.Hangfire
                         }
 
                         string resultSentiment = responseSentiment.Content.ReadAsStringAsync().Result;
-                        var newHeadLine = new HeadLine()
+                        try
                         {
-                            ValueText = item,
-                            CreatedAt = DateTime.UtcNow,
-                            SnapShotId = newSnapShot.Id
-                        };
-                        _ctx.HeadLines.Add(newHeadLine);
+                            HeadLine newHeadLine = new HeadLine()
+                            {
+                                ValueText = item,
+                                CreatedAt = DateTime.UtcNow,
+                                SnapShotId = newSnapShot.Id
+                            };
+                            _ctx.HeadLines.Add(newHeadLine);
 
-                        await _ctx.SaveChangesAsync();
+                            await _ctx.SaveChangesAsync();
+                            
+                            var newSentiment = JsonConvert.DeserializeObject<Sentiment>(resultSentiment);
+                            newSentiment.HeadLineId = newHeadLine.Id;
+                            _ctx.Sentiments.Add(newSentiment);
 
-                        var newSentiment = JsonConvert.DeserializeObject<Sentiment>(resultSentiment);
-                        newSentiment.HeadLineId = newHeadLine.Id;
-                        _ctx.Sentiments.Add(newSentiment);
-
-                        await _ctx.SaveChangesAsync();
+                            await _ctx.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
                     }
                 }
                 catch (Exception ex)
