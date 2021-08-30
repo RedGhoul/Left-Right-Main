@@ -254,7 +254,7 @@ namespace LeftRightNet.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "HeadLines",
+                name: "headLines",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -294,7 +294,7 @@ namespace LeftRightNet.Migrations
                     table.ForeignKey(
                         name: "FK_Sentiments_HeadLines_HeadLineId",
                         column: x => x.HeadLineId,
-                        principalTable: "HeadLines",
+                        principalTable: "headLines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -339,12 +339,12 @@ namespace LeftRightNet.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_HeadLines_CreatedAt",
-                table: "HeadLines",
+                table: "headLines",
                 column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HeadLines_SnapShotId",
-                table: "HeadLines",
+                table: "headLines",
                 column: "SnapShotId");
 
             migrationBuilder.CreateIndex(
@@ -429,7 +429,7 @@ namespace LeftRightNet.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "HeadLines");
+                name: "headLines");
 
             migrationBuilder.DropTable(
                 name: "SnapShots");

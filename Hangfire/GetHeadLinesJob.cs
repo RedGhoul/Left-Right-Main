@@ -15,7 +15,7 @@ namespace LeftRightNet.Hangfire
     public class HeadLineDto
     {
         public string photoIdName { get; set; }
-        public List<string> HeadLines { get; set; }
+        public List<string> headLines { get; set; }
     }
     public class GetHeadLinesJob
     {
@@ -50,11 +50,11 @@ namespace LeftRightNet.Hangfire
             {
 
                 HttpClient client = _clientFactory.CreateClient("GetHeadLines");
-
+                client.Timeout = TimeSpan.FromMinutes(5);
                 string json = JsonConvert.SerializeObject(new
                 {
-                    Name = site.Name,
-                    Url = site.Url
+                    SiteName = site.Name,
+                    SiteUrl = site.Url
                 });
 
                 StringContent data = new StringContent(json, Encoding.UTF8, applicationJson);
@@ -77,7 +77,7 @@ namespace LeftRightNet.Hangfire
                 {
                     var listOfHeadLines = JsonConvert.DeserializeObject<HeadLineDto>(result);
 
-                    var newSnapShot = new Models.SnapShot()
+                    var newSnapShot = new SnapShot()
                     {
                         NewsSiteId = site.Id,
                         ImageHashId = listOfHeadLines.photoIdName,
@@ -88,7 +88,7 @@ namespace LeftRightNet.Hangfire
 
                     await _ctx.SaveChangesAsync();
 
-                    foreach (var item in listOfHeadLines.HeadLines)
+                    foreach (var item in listOfHeadLines.headLines)
                     {
 
                         string jsonSentiment = JsonConvert.SerializeObject(new
@@ -111,7 +111,7 @@ namespace LeftRightNet.Hangfire
                         }
 
                         string resultSentiment = responseSentiment.Content.ReadAsStringAsync().Result;
-                        var newHeadLine = new Models.HeadLine()
+                        var newHeadLine = new HeadLine()
                         {
                             ValueText = item,
                             CreatedAt = DateTime.UtcNow,
@@ -127,9 +127,6 @@ namespace LeftRightNet.Hangfire
 
                         await _ctx.SaveChangesAsync();
                     }
-
-                    
-
                 }
                 catch (Exception ex)
                 {

@@ -130,7 +130,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("SnapShotId");
 
-                    b.ToTable("HeadLines");
+                    b.ToTable("headLines");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.NewsSite", b =>
@@ -351,7 +351,7 @@ namespace LeftRightNet.Migrations
             modelBuilder.Entity("LeftRightNet.Models.HeadLine", b =>
                 {
                     b.HasOne("LeftRightNet.Models.SnapShot", "SnapShot")
-                        .WithMany("HeadLines")
+                        .WithMany("headLines")
                         .HasForeignKey("SnapShotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -444,7 +444,7 @@ namespace LeftRightNet.Migrations
 
             modelBuilder.Entity("LeftRightNet.Models.SnapShot", b =>
                 {
-                    b.Navigation("HeadLines");
+                    b.Navigation("headLines");
                 });
 #pragma warning restore 612, 618
         }

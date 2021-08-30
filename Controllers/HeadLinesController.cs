@@ -21,14 +21,14 @@ namespace LeftRightNet.Controllers
             _context = context;
         }
 
-        // GET: HeadLines
+        // GET: headLines
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.HeadLines.Include(h => h.SnapShot);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: HeadLines/Details/5
+        // GET: headLines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,14 +47,14 @@ namespace LeftRightNet.Controllers
             return View(headLine);
         }
 
-        // GET: HeadLines/Create
+        // GET: headLines/Create
         public IActionResult Create()
         {
             ViewData["SnapShotId"] = new SelectList(_context.SnapShots, "Id", "Id");
             return View();
         }
 
-        // POST: HeadLines/Create
+        // POST: headLines/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -71,7 +71,7 @@ namespace LeftRightNet.Controllers
             return View(headLine);
         }
 
-        // GET: HeadLines/Edit/5
+        // GET: headLines/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,7 +88,7 @@ namespace LeftRightNet.Controllers
             return View(headLine);
         }
 
-        // POST: HeadLines/Edit/5
+        // POST: headLines/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -124,7 +124,7 @@ namespace LeftRightNet.Controllers
             return View(headLine);
         }
 
-        // GET: HeadLines/Delete/5
+        // GET: headLines/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,7 +143,7 @@ namespace LeftRightNet.Controllers
             return View(headLine);
         }
 
-        // POST: HeadLines/Delete/5
+        // POST: headLines/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
