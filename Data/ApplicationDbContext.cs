@@ -1,9 +1,6 @@
 ﻿using LeftRightNet.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LeftRightNet.Data
 {
@@ -23,9 +20,6 @@ namespace LeftRightNet.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<NewsSite>().HasIndex(x => x.Name);
-            builder.Entity<NewsSite>().HasIndex(x => x.Url);
-
             builder.Entity<SnapShot>()
             .HasOne<NewsSite>(x => x.NewsSite)
             .WithMany(x => x.SnapShots)
@@ -40,27 +34,20 @@ namespace LeftRightNet.Data
             .HasForeignKey(x => x.SnapShotId)
             .OnDelete(DeleteBehavior.Cascade);
             
-            builder.Entity<HeadLine>().HasIndex(x => x.CreatedAt);
 
             builder.Entity<HeadLine>()
                 .HasOne(x => x.Sentiment)
                 .WithOne(x => x.HeadLine)
                 .HasForeignKey<Sentiment>(x => x.HeadLineId);
-
-            builder.Entity<HeadLine>()
-                .HasGeneratedTsVectorColumn(
-                    p => p.SearchVector,
-                    "english",
-                    p => new { p.ValueText })
-                .HasIndex(p => p.SearchVector)
-                .HasMethod("GIN");
-
-            builder.Entity<SnapShot>().Property(x => x.ImageHashId).HasColumnType("VARCHAR(255)");
-
+            
+            builder.Entity<NewsSite>().HasIndex(x => x.Name);
+            builder.Entity<NewsSite>().HasIndex(x => x.Url);
             builder.Entity<HeadLine>().HasIndex(x => x.CreatedAt);
             builder.Entity<SnapShot>().HasIndex(x => x.CreatedAt);
             builder.Entity<SnapShot>().HasIndex(x => x.ImageHashId);
             builder.Entity<Sentiment>().HasIndex(x => x.pos);
+            builder.Entity<Sentiment>().HasIndex(x => x.compound);
+            builder.Entity<Sentiment>().HasIndex(x => x.neu);
             builder.Entity<Sentiment>().HasIndex(x => x.neg);
             builder.Entity<Sentiment>().HasIndex(x => x.compound);
         }

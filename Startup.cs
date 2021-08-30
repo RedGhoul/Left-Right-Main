@@ -11,9 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using Hangfire.SqlServer;
-using Hangfire.PostgreSql;
-
 namespace LeftRightNet
 {
     public class Startup
@@ -29,18 +26,21 @@ namespace LeftRightNet
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                         options.UseNpgsql(AppDBConnectionString));
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
+            
+            services.AddDbContext<ApplicationDbContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(AppDBConnectionString, serverVersion)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+            );
 
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-               .AddDefaultTokenProviders()
-               .AddDefaultUI()
-               .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
-            services.AddHangfire(config =>
-                config.UsePostgreSqlStorage(AppDBConnectionString));
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                    options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
             services.AddHttpClient("GetHeadLines");
@@ -71,7 +71,7 @@ namespace LeftRightNet
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHangfireServer();
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 2 });
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new HangFireAuthorizationFilter() }
