@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
+using Hangfire.MySql;
+
 namespace LeftRightNet
 {
     public class Startup
@@ -35,7 +38,20 @@ namespace LeftRightNet
                     .EnableDetailedErrors()
             );
 
-
+            services.AddHangfire(x => x.UseStorage(new MySqlStorage(
+                AppDBConnectionString, 
+                new MySqlStorageOptions
+                {
+                    TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                    QueuePollInterval = TimeSpan.FromSeconds(2),
+                    JobExpirationCheckInterval = TimeSpan.FromSeconds(1),
+                    CountersAggregateInterval = TimeSpan.FromSeconds(5),
+                    PrepareSchemaIfNecessary = true,
+                    DashboardJobListLimit = 50000,
+                    TransactionTimeout = TimeSpan.FromMinutes(1),
+                    TablesPrefix = "Hangfire"
+                })));
+            
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                     options.SignIn.RequireConfirmedAccount = false)
                 .AddDefaultTokenProviders()
