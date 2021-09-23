@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.SqlServer;
 using LeftRightNet.Data;
 using LeftRightNet.Hangfire;
 using LeftRightNet.Models;
@@ -11,8 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Transactions;
-using Hangfire.MySql;
 
 namespace LeftRightNet
 {
@@ -29,40 +28,34 @@ namespace LeftRightNet
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
-            
-            services.AddDbContext<ApplicationDbContext>(
-                dbContextOptions => dbContextOptions
-                    .UseMySql(AppDBConnectionString, serverVersion)
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors()
-            );
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    AppDBConnectionString,
+                    opt => opt.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
 
-            services.AddHangfire(x => x.UseStorage(new MySqlStorage(
-                AppDBConnectionString, 
-                new MySqlStorageOptions
+
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
                 {
-                    TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-                    QueuePollInterval = TimeSpan.FromSeconds(2),
-                    JobExpirationCheckInterval = TimeSpan.FromSeconds(1),
-                    CountersAggregateInterval = TimeSpan.FromSeconds(5),
-                    PrepareSchemaIfNecessary = true,
-                    DashboardJobListLimit = 50000,
-                    TransactionTimeout = TimeSpan.FromMinutes(1),
-                    TablesPrefix = "Hangfire"
-                })));
-            
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-                    options.SignIn.RequireConfirmedAccount = false)
-                .AddDefaultTokenProviders()
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddDefaultTokenProviders();
 
-
+            services.AddHangfireServer();
             services.AddHttpClient("GetHeadLines");
-
             services.AddRazorPages();
-
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +80,6 @@ namespace LeftRightNet
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 2 });
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new HangFireAuthorizationFilter() }

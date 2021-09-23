@@ -49,7 +49,7 @@ namespace LeftRightNet.Data
             builder.Entity<Sentiment>().HasIndex(x => x.compound);
             builder.Entity<Sentiment>().HasIndex(x => x.neu);
             builder.Entity<Sentiment>().HasIndex(x => x.neg);
-            
+
             builder.Entity<HeadLine>().HasIndex(x => x.ValueText).IsUnique();
         }
     }

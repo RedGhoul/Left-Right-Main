@@ -16,7 +16,6 @@ namespace LeftRightNet
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseSentry();
                 }).UseSerilog();
     }
 }

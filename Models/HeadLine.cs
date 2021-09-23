@@ -11,7 +11,7 @@ namespace LeftRightNet.Models
     {
         public int Id { get; set; }
         [Required]
-        [Column(TypeName = "varchar(1000)")]
+        [Column(TypeName = "nvarchar(1000)")]
         public string ValueText { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public SnapShot SnapShot { get; set; }
