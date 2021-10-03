@@ -31,9 +31,16 @@ namespace LeftRightNet.Controllers
             {
                 var currentTime = DateTime.UtcNow;
                 var pastTime = DateTime.UtcNow.AddDays(-2);
-                ss.SiteHeadLines.Add(item.Name.ToUpper(), _ctx.HeadLines.Include(x => x.Sentiment).Include(x => x.SnapShot).ThenInclude(x => x.NewsSite)
+                ss.SiteHeadLines.Add(
+                    item.Name.ToUpper(), 
+                    _ctx.HeadLines.
+                        Include(x => x.Sentiment).
+                        Include(x => x.SnapShot).
+                        ThenInclude(x => x.NewsSite)
                     .Where(x => x.SnapShot.NewsSite.Id == item.Id
-                     && x.CreatedAt < currentTime && x.CreatedAt > pastTime && (x.Sentiment.compound != 0 || x.Sentiment.neg != 0))
+                     && x.CreatedAt < currentTime && x.CreatedAt > pastTime &&
+                     x.Sentiment != null &&
+                     (x.Sentiment.compound != 0 || x.Sentiment.neg != 0))
                     .OrderByDescending(x => x.CreatedAt).Take(10).ToList());
             }
 
