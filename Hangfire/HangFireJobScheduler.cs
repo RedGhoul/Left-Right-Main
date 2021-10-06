@@ -13,7 +13,7 @@ namespace LeftRightNet.Hangfire
             RecurringJob.RemoveIfExists(nameof(GetHeadLinesJob));
             RecurringJob.AddOrUpdate<GetHeadLinesJob>(nameof(GetHeadLinesJob),
                 job => job.Run(JobCancellationToken.Null),
-                "0 */2 * * *", TimeZoneInfo.Local);
+                "0 */1 * * *", TimeZoneInfo.Local);
         }
     }
 }
