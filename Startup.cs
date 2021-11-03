@@ -1,5 +1,4 @@
 using Hangfire;
-using Hangfire.SqlServer;
 using LeftRightNet.Data;
 using LeftRightNet.Hangfire;
 using LeftRightNet.Models;
@@ -12,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
+using Hangfire.MySql;
 
 namespace LeftRightNet
 {
@@ -28,24 +29,25 @@ namespace LeftRightNet
         {
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    AppDBConnectionString,
-                    opt => opt.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
+            services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContextOptions
+                .UseMySql(AppDBConnectionString,new MySqlServerVersion(new Version(8, 0, 26)))
+            );
 
 
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(AppDBConnectionString, new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    DisableGlobalLocks = true
-                }));
+            services.AddHangfire(config => config.UseStorage(
+                new MySqlStorage(
+                    AppDBConnectionString, 
+                    new MySqlStorageOptions
+                    {
+                        TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                        QueuePollInterval = TimeSpan.FromSeconds(15),
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                        PrepareSchemaIfNecessary = true,
+                        DashboardJobListLimit = 50000,
+                        TransactionTimeout = TimeSpan.FromMinutes(1),
+                        TablesPrefix = "Hangfire"
+                    })));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -114,7 +116,7 @@ namespace LeftRightNet
 
                 //Assign Admin role to the main User here we have given our newly registered 
                 //login id for Admin management
-                // Also Assigning them Claims to perform CUD operations
+                // Also Assigning them Claims to perform CRUD operations
                 ApplicationUser user = await UserManager.FindByEmailAsync("avaneesab5@gmail.com");
                 if (user != null)
                 {
