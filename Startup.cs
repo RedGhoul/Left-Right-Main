@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Transactions;
 using Hangfire.MySql;
+using Hangfire.MemoryStorage;
 
 namespace LeftRightNet
 {
@@ -33,21 +34,10 @@ namespace LeftRightNet
                 .UseMySql(AppDBConnectionString,new MySqlServerVersion(new Version(8, 0, 26)))
             );
 
-
-            services.AddHangfire(config => config.UseStorage(
-                new MySqlStorage(
-                    AppDBConnectionString, 
-                    new MySqlStorageOptions
-                    {
-                        TransactionIsolationLevel = IsolationLevel.ReadCommitted,
-                        QueuePollInterval = TimeSpan.FromSeconds(15),
-                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                        PrepareSchemaIfNecessary = true,
-                        DashboardJobListLimit = 50000,
-                        TransactionTimeout = TimeSpan.FromMinutes(1),
-                        TablesPrefix = "Hangfire"
-                    })));
+            services.AddHangfire(config =>
+            {
+                config.UseMemoryStorage();
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
