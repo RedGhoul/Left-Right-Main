@@ -29,7 +29,7 @@ namespace LeftRightNet
             string AppDBConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContextOptions
-                .UseMySql(AppDBConnectionString,new MySqlServerVersion(new Version(8, 0, 26)))
+                .UseSqlServer(AppDBConnectionString)
             );
 
             services.AddHangfire(config =>

@@ -9,6 +9,7 @@ namespace LeftRightNet.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            Database.SetCommandTimeout(150000);
         }
 
         public DbSet<HeadLine> HeadLines { get; set; }
@@ -19,6 +20,12 @@ namespace LeftRightNet.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            foreach (var et in builder.Model.GetEntityTypes())
+            {
+                et.SetSchema("leftright");
+            }
+
 
             builder.Entity<SnapShot>()
             .HasOne<NewsSite>(x => x.NewsSite)
