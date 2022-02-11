@@ -21,11 +21,6 @@ namespace LeftRightNet.Data
         {
             base.OnModelCreating(builder);
 
-            foreach (var et in builder.Model.GetEntityTypes())
-            {
-                et.SetSchema("leftright");
-            }
-
 
             builder.Entity<SnapShot>()
             .HasOne<NewsSite>(x => x.NewsSite)

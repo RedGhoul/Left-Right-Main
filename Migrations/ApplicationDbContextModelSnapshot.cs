@@ -90,7 +90,7 @@ namespace LeftRightNet.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", "leftright");
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.Config", b =>
@@ -111,7 +111,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Configs", "leftright");
+                    b.ToTable("Configs");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.HeadLine", b =>
@@ -138,7 +138,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("SnapShotId");
 
-                    b.ToTable("HeadLines", "leftright");
+                    b.ToTable("HeadLines");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.NewsSite", b =>
@@ -163,7 +163,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("Url");
 
-                    b.ToTable("NewsSites", "leftright");
+                    b.ToTable("NewsSites");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.Sentiment", b =>
@@ -202,7 +202,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("pos");
 
-                    b.ToTable("Sentiments", "leftright");
+                    b.ToTable("Sentiments");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.SnapShot", b =>
@@ -231,7 +231,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("NewsSiteId");
 
-                    b.ToTable("SnapShots", "leftright");
+                    b.ToTable("SnapShots");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -258,7 +258,7 @@ namespace LeftRightNet.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", "leftright");
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -283,7 +283,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "leftright");
+                    b.ToTable("AspNetRoleClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -308,7 +308,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "leftright");
+                    b.ToTable("AspNetUserClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -330,7 +330,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "leftright");
+                    b.ToTable("AspNetUserLogins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -345,7 +345,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "leftright");
+                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -364,7 +364,7 @@ namespace LeftRightNet.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "leftright");
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("LeftRightNet.Models.HeadLine", b =>
